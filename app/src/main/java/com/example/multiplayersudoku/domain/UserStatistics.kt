@@ -1,0 +1,12 @@
+package com.example.multiplayersudoku.domain
+
+//shortest or best times of solving any particular difficulty or size of the sudoku puzzle
+//will store time taken to solve puzzle in milliseconds, hence long
+data class UserStatistics(
+    val fourEasy: Long = 0,
+    val nineEasy: Long = 0,
+    val fourMedium: Long = 0,
+    val nineMedium: Long = 0,
+    val fourHard: Long = 0,
+    val nineHard: Long = 0
+)
