@@ -2,7 +2,6 @@ package com.example.multiplayersudoku.common
 
 import android.app.Activity
 import android.widget.Toast
-import com.bracketcove.graphsudoku.R
 import com.example.multiplayersudoku.domain.Difficulty
 import com.example.multiplayersudoku.domain.SudokuNode
 import java.util.LinkedList
@@ -29,9 +28,9 @@ internal fun Long.toTime(): String {
 internal val Difficulty.toLocalizedResource: Int
     get() {
         return when (this) {
-            Difficulty.EASY -> R.string.easy
-            Difficulty.MEDIUM -> R.string.medium
-            Difficulty.HARD -> R.string.hard
+            Difficulty.EASY -> com.example.multiplayersudoku.R.string.easy
+            Difficulty.MEDIUM -> com.example.multiplayersudoku.R.string.medium
+            Difficulty.HARD -> com.example.multiplayersudoku.R.string.hard
         }
     }
 

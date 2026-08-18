@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.bracketcove.graphsudoku' // <-- Add this line
+    namespace 'com.example.multiplayersudoku'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.bracketcove.graphsudoku"
+        applicationId "com.example.multiplayersudoku"
         minSdk 21
         targetSdk 34
         versionCode 14
