@@ -2,8 +2,10 @@ package com.example.multiplayersudoku.common
 
 import android.app.Activity
 import android.widget.Toast
-import com.example.multiplayersudoku.R
+import com.bracketcove.graphsudoku.R
 import com.example.multiplayersudoku.domain.Difficulty
+import com.example.multiplayersudoku.domain.SudokuNode
+import java.util.LinkedList
 
 
 internal fun Activity.makeToast(message:String) {
@@ -32,3 +34,9 @@ internal val Difficulty.toLocalizedResource: Int
             Difficulty.HARD -> R.string.hard
         }
     }
+
+internal fun LinkedList<SudokuNode>.mergeWithoutRepeats(other: LinkedList<SudokuNode>) {
+    other.forEach {
+        if (!this.contains(it)) this.add(it)
+    }
+}

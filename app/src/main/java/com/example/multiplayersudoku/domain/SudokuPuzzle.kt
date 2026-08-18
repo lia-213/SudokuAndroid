@@ -1,5 +1,6 @@
 package com.example.multiplayersudoku.domain
 
+import com.example.multiplayersudoku.computationLogic.buildNewSudoku
 import java.io.Serializable
 import java.util.LinkedList
 
@@ -12,4 +13,5 @@ data class SudokuPuzzle(
     var elapsedTime: Long = 0L
 ): Serializable {
     fun getValue(): LinkedHashMap<Int, LinkedList<SudokuNode>> = graph
+    fun print(): String = "SudokuPuzzle(boundary=$boundary, difficulty=$difficulty)"
 }
