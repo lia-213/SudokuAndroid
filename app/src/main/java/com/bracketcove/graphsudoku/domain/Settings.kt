@@ -1,4 +1,4 @@
-package com.example.multiplayersudoku.domain
+package com.bracketcove.graphsudoku.domain
 
 //a data model (poko - plain old kotlin object)
 //containing both difficult and boundary of size of the sudoku puzzle

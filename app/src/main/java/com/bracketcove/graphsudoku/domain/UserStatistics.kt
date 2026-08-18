@@ -1,4 +1,4 @@
-package com.example.multiplayersudoku.domain
+package com.bracketcove.graphsudoku.domain
 
 //shortest or best times of solving any particular difficulty or size of the sudoku puzzle
 //will store time taken to solve puzzle in milliseconds, hence long

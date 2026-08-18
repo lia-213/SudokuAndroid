@@ -1,6 +1,6 @@
-package com.example.multiplayersudoku.domain
+package com.bracketcove.graphsudoku.domain
 
-import com.example.multiplayersudoku.computationLogic.buildNewSudoku
+import com.bracketcove.graphsudoku.computationLogic.buildNewSudoku
 import java.io.Serializable
 import java.util.LinkedList
 

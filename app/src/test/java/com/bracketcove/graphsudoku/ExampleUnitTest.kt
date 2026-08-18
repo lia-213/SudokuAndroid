@@ -1,4 +1,4 @@
-package com.example.multiplayersudoku
+package com.bracketcove.graphsudoku
 
 import org.junit.Test
 

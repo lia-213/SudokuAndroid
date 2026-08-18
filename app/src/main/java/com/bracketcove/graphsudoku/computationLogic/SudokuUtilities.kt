@@ -1,8 +1,9 @@
-package com.example.multiplayersudoku.computationLogic
+package com.bracketcove.graphsudoku.computationLogic
 
-import com.example.multiplayersudoku.domain.Difficulty
-import com.example.multiplayersudoku.domain.SudokuNode
-import com.example.multiplayersudoku.domain.SudokuPuzzle
+import com.bracketcove.graphsudoku.R
+import com.bracketcove.graphsudoku.domain.Difficulty
+import com.bracketcove.graphsudoku.domain.SudokuNode
+import com.bracketcove.graphsudoku.domain.SudokuPuzzle
 import java.util.LinkedList
 
 fun buildNewSudoku(boundary: Int, difficulty: Difficulty): SudokuPuzzle {

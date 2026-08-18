@@ -1,4 +1,4 @@
-package com.example.multiplayersudoku.common
+package com.bracketcove.graphsudoku.common
 
 import kotlinx.coroutines.Job
 

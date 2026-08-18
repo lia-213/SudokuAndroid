@@ -1,4 +1,4 @@
-package com.example.multiplayersudoku.domain
+package com.bracketcove.graphsudoku.domain
 
 interface IStatisticsRepository {
     suspend fun getStatistics(

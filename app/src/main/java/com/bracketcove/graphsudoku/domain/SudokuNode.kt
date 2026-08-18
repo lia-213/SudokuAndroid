@@ -9,7 +9,7 @@ A node in a sudoku puzzle is denoted by:
 // TODO: Serializable seems to allow us to read and write our sudokunodes, and also the
 //  whole puzzle to a file. Since we are only storing one at a time at thi point.
 //  will have to change this for a db!!
-package com.example.multiplayersudoku.domain
+package com.bracketcove.graphsudoku.domain
 
 import java.io.Serializable
 

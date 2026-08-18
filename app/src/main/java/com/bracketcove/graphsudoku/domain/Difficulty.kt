@@ -1,4 +1,4 @@
-package com.example.multiplayersudoku.domain
+package com.bracketcove.graphsudoku.domain
 
 // in Kotlin and Java, enum classes are useful for creating a restricted set of values
 // can greatly improve the legibility of the code

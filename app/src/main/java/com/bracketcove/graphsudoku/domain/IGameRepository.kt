@@ -1,4 +1,4 @@
-package com.example.multiplayersudoku.domain
+package com.bracketcove.graphsudoku.domain
 
 // suspend keyword used bc these functionswill be called from coroutine scope,
 // which exist in the logic class/presenter that will be referencing this particular interface.
