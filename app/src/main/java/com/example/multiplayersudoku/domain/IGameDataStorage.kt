@@ -3,7 +3,9 @@ package com.example.multiplayersudoku.domain
 
 // result wrapper
 interface IGameDataStorage {
-
+    suspend fun updateGame(game:SudokuPuzzle): GameStorageResult
+    suspend fun updateNode(x: Int, y: Int, elapsedTime: Long): GameStorageResult
+    suspend fun getCurrentGame(): GameStorageResult
 }
 
 sealed class GameStorageResult {
