@@ -8,8 +8,7 @@ import com.bracketcove.graphsudoku.domain.Settings
 import com.bracketcove.graphsudoku.domain.SettingsStorageResult
 import com.bracketcove.graphsudoku.domain.SudokuPuzzle
 
-// focusing on extracting data from different backend data sources depending on the situation so presentation class m
-class GameRepositoryImpl (
+class GameRepositoryImpl(
     private val gameStorage: IGameDataStorage,
     private val settingsStorage: ISettingsStorage
 ) : IGameRepository {
@@ -27,6 +26,7 @@ class GameRepositoryImpl (
                 )
                 onSuccess(Unit)
             }
+
             is GameStorageResult.OnError -> {
                 onError(getCurrentGameResult.exception)
             }
@@ -56,6 +56,7 @@ class GameRepositoryImpl (
             is GameStorageResult.OnSuccess -> onSuccess(
                 puzzleIsComplete(result.currentGame)
             )
+
             is GameStorageResult.OnError -> onError(
                 result.exception
             )
@@ -89,7 +90,7 @@ class GameRepositoryImpl (
                     getCurrentGameResult.currentGame
                 )
             )
-            // when the user opens the app and starts new game
+
             is GameStorageResult.OnError -> {
                 when (val getSettingsResult = settingsStorage.getSettings()) {
                     is SettingsStorageResult.OnSuccess -> {
@@ -101,10 +102,13 @@ class GameRepositoryImpl (
                                     updateGameResult.currentGame
                                 )
                             )
+
                             is GameStorageResult.OnError -> onError(updateGameResult.exception)
                         }
                     }
+
                     is SettingsStorageResult.OnError -> onError(getSettingsResult.exception)
+                    is SettingsStorageResult.OnComplete -> {} // Should not happen for getSettings
                 }
             }
         }
@@ -122,7 +126,15 @@ class GameRepositoryImpl (
                     is GameStorageResult.OnError -> onError(updateGameResult.exception)
                 }
             }
+
             is SettingsStorageResult.OnError -> onError(updateSettingsResult.exception)
+            is SettingsStorageResult.OnSuccess -> {
+                // Also handle OnSuccess if it's returned by updateSettings
+                when (val updateGameResult = createAndWriteNewGame(settings)) {
+                    is GameStorageResult.OnSuccess -> onSuccess(Unit)
+                    is GameStorageResult.OnError -> onError(updateGameResult.exception)
+                }
+            }
         }
     }
 
@@ -135,6 +147,10 @@ class GameRepositoryImpl (
         )
     }
 
+    private fun puzzleIsComplete(puzzle: SudokuPuzzle): Boolean {
+        return com.bracketcove.graphsudoku.computationLogic.puzzleIsValid(puzzle)
+    }
+
     override suspend fun getSettings(
         onSuccess: (Settings) -> Unit,
         onError: (Exception) -> Unit
@@ -142,7 +158,7 @@ class GameRepositoryImpl (
         when (val getSettingsResult = settingsStorage.getSettings()) {
             is SettingsStorageResult.OnSuccess -> onSuccess(getSettingsResult.settings)
             is SettingsStorageResult.OnError -> onError(getSettingsResult.exception)
-
+            is SettingsStorageResult.OnComplete -> {}
         }
     }
 
@@ -151,9 +167,10 @@ class GameRepositoryImpl (
         onSuccess: (Unit) -> Unit,
         onError: (Exception) -> Unit
     ) {
-        // TODO: eventually wrap this in a when block to handle errors like in other methods for this class
-        settingsStorage.updateSettings(settings)
-        onSuccess(Unit)
+        when (val updateSettingsResult = settingsStorage.updateSettings(settings)) {
+            is SettingsStorageResult.OnComplete -> onSuccess(Unit)
+            is SettingsStorageResult.OnSuccess -> onSuccess(Unit)
+            is SettingsStorageResult.OnError -> onError(updateSettingsResult.exception)
+        }
     }
-
 }

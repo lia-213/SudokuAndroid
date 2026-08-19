@@ -41,3 +41,6 @@ internal fun LinkedList<SudokuNode>.mergeWithoutRepeats(other: LinkedList<Sudoku
     }
 }
 
+internal val Int.sqrt: Int
+    get() = kotlin.math.sqrt(this.toDouble()).toInt()
+

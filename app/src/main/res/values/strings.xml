@@ -14,4 +14,5 @@
     <string name="total_time">"Total Time: "</string>
     <string name="logo_description">App Logo.</string>
     <string name="dropdown">Dropdown Arrow</string>
+    <string name="title_activity_active_game">ActiveGameActivity</string>
 </resources>
