@@ -41,4 +41,3 @@ internal fun LinkedList<SudokuNode>.mergeWithoutRepeats(other: LinkedList<Sudoku
     }
 }
 
-//47.41
