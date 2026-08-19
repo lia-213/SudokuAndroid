@@ -1,5 +1,6 @@
 package com.bracketcove.graphsudoku.domain
 
+// where we store records for the shortest times to completion of each board size and difficulty
 interface IStatisticsRepository {
     suspend fun getStatistics(
         onSuccess: (UserStatistics) -> Unit,

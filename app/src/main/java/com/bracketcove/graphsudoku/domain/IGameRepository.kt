@@ -1,4 +1,5 @@
 package com.bracketcove.graphsudoku.domain
+// where we store game data: settings and current progress of the user's game
 
 // suspend keyword used bc these functionswill be called from coroutine scope,
 // which exist in the logic class/presenter that will be referencing this particular interface.
