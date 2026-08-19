@@ -1,6 +1,5 @@
 package com.bracketcove.graphsudoku.domain
 
-import com.bracketcove.graphsudoku.computationLogic.buildNewSudoku
 import java.io.Serializable
 import java.util.LinkedList
 
@@ -8,8 +7,7 @@ import java.util.LinkedList
 data class SudokuPuzzle(
     val boundary: Int,
     val difficulty: Difficulty,
-    val graph: LinkedHashMap<Int, LinkedList<SudokuNode>>
-    = buildNewSudoku(boundary, difficulty).graph,
+    val graph: LinkedHashMap<Int, LinkedList<SudokuNode>>,
     var elapsedTime: Long = 0L
 ): Serializable {
     fun getValue(): LinkedHashMap<Int, LinkedList<SudokuNode>> = graph

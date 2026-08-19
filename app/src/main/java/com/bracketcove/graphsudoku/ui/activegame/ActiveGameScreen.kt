@@ -123,7 +123,7 @@ fun ActiveGameScreen(
                 .padding(top = 4.dp),
             contentAlignment = Alignment.TopCenter
         ) {
-            when (contentTransitionState.currentState) {
+            when (contentTransitionState.targetState) {
                 ActiveGameScreenState.ACTIVE -> Box(
                     Modifier.alpha(activeAlpha)
                 ) {
@@ -400,8 +400,8 @@ fun SudokuTextFields(
                 ),
                 modifier = Modifier
                     .absoluteOffset(
-                        (tileOffset * (tile.x)).dp,
-                        (tileOffset * (tile.y)).dp,
+                        (tileOffset * (tile.x - 1)).dp,
+                        (tileOffset * (tile.y - 1)).dp,
                     )
                     .size(tileOffset.dp)
                     .background(
@@ -421,8 +421,8 @@ fun SudokuTextFields(
                 style = readOnlySudokuSquare(tileOffset),
                 modifier = Modifier
                     .absoluteOffset(
-                        (tileOffset * (tile.x)).dp,
-                        (tileOffset * (tile.y)).dp,
+                        (tileOffset * (tile.x - 1)).dp,
+                        (tileOffset * (tile.y - 1)).dp,
                     )
                     .size(tileOffset.dp),
                 textAlign = TextAlign.Center
@@ -432,7 +432,6 @@ fun SudokuTextFields(
 }
 
 @Composable
-//screen for when a user finishes a game
 fun GameCompleteContent(timerState: Long, isNewRecordState: Boolean) {
     Column(
         Modifier.fillMaxSize()

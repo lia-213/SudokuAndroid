@@ -16,7 +16,9 @@ import java.io.Serializable
 data class SudokuNode(
     val x: Int,
     val y: Int,
+    // value (int) from 0 to the boundary of the puzzle - color wrong name really
     var color: Int = 0,
+    // readOnly true -> a hint given at the start
     var readOnly: Boolean = true,
 ): Serializable {
     override fun hashCode(): Int {

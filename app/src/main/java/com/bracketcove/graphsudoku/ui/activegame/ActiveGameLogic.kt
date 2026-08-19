@@ -102,6 +102,7 @@ class ActiveGameLogic(
             },
             // ask the storage for a current game and there is no game to retrieve? not started before - user running for the first time
             {
+                android.util.Log.d("SUDOKU", "No current game found, redirecting to new game")
                 container?.onNewGameClick()
             }
         )

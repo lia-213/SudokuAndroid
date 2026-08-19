@@ -35,7 +35,7 @@ internal val Difficulty.toLocalizedResource: Int
         }
     }
 
-internal fun LinkedList<SudokuNode>.mergeWithoutRepeats(other: LinkedList<SudokuNode>) {
+internal fun LinkedList<SudokuNode>.mergeWithoutRepeats(other: List<SudokuNode>) {
     other.forEach {
         if (!this.contains(it)) this.add(it)
     }

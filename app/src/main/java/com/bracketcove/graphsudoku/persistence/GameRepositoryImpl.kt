@@ -138,17 +138,18 @@ class GameRepositoryImpl(
         }
     }
 
-    private suspend fun createAndWriteNewGame(settings: Settings): GameStorageResult {
-        return gameStorage.updateGame(
-            SudokuPuzzle(
-                settings.boundary,
-                settings.difficulty
+    private suspend fun createAndWriteNewGame(settings: Settings): GameStorageResult =
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            return@withContext gameStorage.updateGame(
+                com.bracketcove.graphsudoku.computationLogic.buildSudoku(
+                    settings.boundary,
+                    settings.difficulty
+                )
             )
-        )
-    }
+        }
 
     private fun puzzleIsComplete(puzzle: SudokuPuzzle): Boolean {
-        return com.bracketcove.graphsudoku.computationLogic.puzzleIsValid(puzzle)
+        return com.bracketcove.graphsudoku.computationLogic.puzzleIsComplete(puzzle)
     }
 
     override suspend fun getSettings(
