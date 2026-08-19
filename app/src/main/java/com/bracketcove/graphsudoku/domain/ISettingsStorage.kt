@@ -6,6 +6,6 @@ interface ISettingsStorage {
 }
 
 sealed class SettingsStorageResult {
-    data class OnSuccess(val settings: Settings) : GameStorageResult()
-    data class OnError(val exception: Exception) : GameStorageResult()
+    data class OnSuccess(val settings: Settings) : SettingsStorageResult()
+    data class OnError(val exception: Exception) : SettingsStorageResult()
 }

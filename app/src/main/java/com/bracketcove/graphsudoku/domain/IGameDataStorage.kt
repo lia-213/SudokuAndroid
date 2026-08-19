@@ -4,7 +4,7 @@ package com.bracketcove.graphsudoku.domain
 // result wrapper
 interface IGameDataStorage {
     suspend fun updateGame(game:SudokuPuzzle): GameStorageResult
-    suspend fun updateNode(x: Int, y: Int, elapsedTime: Long): GameStorageResult
+    suspend fun updateNode(x: Int, y: Int, color: Int, elapsedTime: Long): GameStorageResult
     suspend fun getCurrentGame(): GameStorageResult
 }
 
