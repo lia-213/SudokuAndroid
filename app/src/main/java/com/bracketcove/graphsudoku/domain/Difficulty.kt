@@ -4,6 +4,6 @@ package com.bracketcove.graphsudoku.domain
 // can greatly improve the legibility of the code
 enum class Difficulty(val modifier: Double) {
     EASY(0.5),
-    MEDIUM(0.44),
-    HARD(0.38)
+    MEDIUM(0.38),
+    HARD(0.26)
 }
