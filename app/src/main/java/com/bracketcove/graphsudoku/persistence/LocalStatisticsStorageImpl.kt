@@ -75,10 +75,10 @@ class LocalStatisticsStorageImpl(
         get() {
             return UserStatistics(
                 fourEasy = this.fourEasy,
-                nineEasy = this.nineEasy,
                 fourMedium = this.fourMedium,
-                nineMedium = this.nineMedium,
                 fourHard = this.fourHard,
+                nineEasy = this.nineEasy,
+                nineMedium = this.nineMedium,
                 nineHard = this.nineHard
             )
         }
