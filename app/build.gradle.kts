@@ -45,8 +45,10 @@ android {
         jvmTarget = "17"
     }
 
-    kotlin {
-        jvmToolchain(17)
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
 
     buildFeatures {
