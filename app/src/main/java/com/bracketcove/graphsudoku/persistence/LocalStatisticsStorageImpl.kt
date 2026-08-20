@@ -74,12 +74,12 @@ class LocalStatisticsStorageImpl(
     private val Statistics.toUserStatistics: UserStatistics
         get() {
             return UserStatistics(
-                this.fourEasy,
-                this.fourMedium,
-                this.fourHard,
-                this.nineEasy,
-                this.nineMedium,
-                this.nineHard
+                fourEasy = this.fourEasy,
+                nineEasy = this.nineEasy,
+                fourMedium = this.fourMedium,
+                nineMedium = this.nineMedium,
+                fourHard = this.fourHard,
+                nineHard = this.nineHard
             )
         }
 
