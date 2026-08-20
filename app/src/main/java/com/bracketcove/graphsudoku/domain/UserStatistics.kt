@@ -1,7 +1,9 @@
 package com.bracketcove.graphsudoku.domain
 
-//shortest or best times of solving any particular difficulty or size of the sudoku puzzle
-//will store time taken to solve puzzle in milliseconds, hence long
+/**
+ * Data model for storing the best completion times for different board sizes and difficulties.
+ * All times are in milliseconds. 0 indicates no record set.
+ */
 data class UserStatistics(
     val fourEasy: Long = 0,
     val fourMedium: Long = 0,

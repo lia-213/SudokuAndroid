@@ -7,6 +7,15 @@ import com.bracketcove.graphsudoku.ui.newgame.NewGameContainer
 import com.bracketcove.graphsudoku.ui.newgame.NewGameLogic
 import com.bracketcove.graphsudoku.ui.newgame.NewGameViewModel
 
+/**
+ * Assembles a [NewGameLogic] instance with its production dependencies: repositories
+ * backed by local file/DataStore persistence and the production [DispatcherProvider].
+ *
+ * @param container The UI host that will receive navigation/error callbacks.
+ * @param viewModel The screen's view model to be mutated by the logic.
+ * @param context Android [Context] used to locate local storage locations.
+ * @return A fully-wired [NewGameLogic] instance.
+ */
 internal fun buildNewGameLogic(
     container: NewGameContainer,
     viewModel: NewGameViewModel,

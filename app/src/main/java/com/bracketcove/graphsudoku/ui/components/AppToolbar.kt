@@ -12,6 +12,13 @@ import androidx.compose.ui.text.style.TextAlign
 import com.bracketcove.graphsudoku.ui.textColorDark
 import com.bracketcove.graphsudoku.ui.textColorLight
 
+/**
+ * App-wide top app bar that shows a title and a trailing action icon, styled using the
+ * current [MaterialTheme] color scheme.
+ *
+ * @param title The text displayed as the toolbar's title.
+ * @param icon The trailing action content rendered in the toolbar's actions slot.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppToolbar(

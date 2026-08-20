@@ -1,7 +1,10 @@
 package com.bracketcove.graphsudoku.domain
 
-// in Kotlin and Java, enum classes are useful for creating a restricted set of values
-// can greatly improve the legibility of the code
+/**
+ * Represents the difficulty levels for a Sudoku puzzle.
+ *
+ * @property modifier A value used to determine how many clues remain in the puzzle.
+ */
 enum class Difficulty(val modifier: Double) {
     EASY(0.5),
     MEDIUM(0.38),

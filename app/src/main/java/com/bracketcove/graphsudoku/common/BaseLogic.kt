@@ -2,9 +2,20 @@ package com.bracketcove.graphsudoku.common
 
 import kotlinx.coroutines.Job
 
-// abstract used here for situations where we want to share behaviour (e.g. function stub == abstract function
-//which we want to be inherited across any class that inherits from baselogic.kt), and want a protected (not public) variable
+/**
+ * Base class for UI Logic (or ViewModels in other architectures) that handles UI events.
+ * It provides a [jobTracker] to manage coroutines and an [onEvent] function to be implemented
+ * by subclasses to process specific UI events.
+ *
+ * @param EVENT The type of event that this logic class can handle.
+ */
 abstract class BaseLogic<EVENT> {
     protected lateinit var jobTracker: Job
+
+    /**
+     * Handles the incoming [event] from the UI.
+     *
+     * @param event The event to be processed.
+     */
     abstract fun onEvent(event: EVENT)
 }

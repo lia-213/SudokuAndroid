@@ -14,11 +14,21 @@ import java.io.ObjectOutputStream
 
 private const val FILE_NAME = "game_state.txt"
 
+/**
+ * Implementation of [IGameDataStorage] that serializes the [SudokuPuzzle] to a flat file
+ * on disk via Java object serialization, rather than a database.
+ */
 class LocalGameStorageImpl(
     fileStorageDirectory: String,
     private val pathToStorageFile: File = File(fileStorageDirectory, FILE_NAME)
 ) : IGameDataStorage {
 
+    /**
+     * Serializes and writes the entire game state to [pathToStorageFile].
+     *
+     * @param game The [SudokuPuzzle] to save.
+     * @return A [GameStorageResult] indicating success or failure.
+     */
     override suspend fun updateGame(game: SudokuPuzzle): GameStorageResult {
         return withContext(Dispatchers.IO) {
             val result: GameStorageResult = try {
@@ -31,6 +41,11 @@ class LocalGameStorageImpl(
         }
     }
 
+    /**
+     * Writes the given [game] to [pathToStorageFile] using [ObjectOutputStream].
+     *
+     * @param game The [SudokuPuzzle] to serialize to disk.
+     */
     private fun updateGameData(game: SudokuPuzzle) {
         try {
             val fileOutputStream = FileOutputStream(pathToStorageFile)
@@ -42,6 +57,17 @@ class LocalGameStorageImpl(
         }
     }
 
+    /**
+     * Reads the current game from disk, updates a single node's color (unless it is
+     * read-only), updates the elapsed time, and re-serializes the game back to
+     * [pathToStorageFile].
+     *
+     * @param x The x coordinate of the node.
+     * @param y The y coordinate of the node.
+     * @param color The new color (value) of the node.
+     * @param elapsedTime The updated elapsed time of the game.
+     * @return A [GameStorageResult] indicating success or failure.
+     */
     override suspend fun updateNode(
         x: Int,
         y: Int,
@@ -65,6 +91,11 @@ class LocalGameStorageImpl(
         }
     }
 
+    /**
+     * Reads and deserializes the [SudokuPuzzle] currently stored at [pathToStorageFile].
+     *
+     * @return The deserialized [SudokuPuzzle].
+     */
     private fun getGame(): SudokuPuzzle {
         try {
             val fileInputStream = FileInputStream(pathToStorageFile)
@@ -77,6 +108,12 @@ class LocalGameStorageImpl(
         }
     }
 
+    /**
+     * Retrieves the currently saved game from [pathToStorageFile].
+     *
+     * @return A [GameStorageResult] containing the current game or an error (e.g. if the
+     * file does not exist yet).
+     */
     override suspend fun getCurrentGame(): GameStorageResult {
         return withContext(Dispatchers.IO) {
             val result: GameStorageResult = try {

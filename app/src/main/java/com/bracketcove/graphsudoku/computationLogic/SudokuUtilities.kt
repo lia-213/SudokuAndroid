@@ -6,18 +6,38 @@ import com.bracketcove.graphsudoku.domain.getHash
 import java.util.*
 import kotlin.math.sqrt
 
+/**
+ * Extension property for [Int] to calculate its integer square root.
+ */
 internal val Int.sqrt: Int
     get() = sqrt(this.toDouble()).toInt()
 
-
+/**
+ * Checks if a Sudoku puzzle is complete and valid.
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if the puzzle is valid and has no empty squares, false otherwise.
+ */
 fun puzzleIsComplete(puzzle: SudokuPuzzle): Boolean {
     return puzzleIsValid(puzzle) && !hasEmptySquares(puzzle)
 }
 
+/**
+ * Checks if a Sudoku puzzle is valid according to Sudoku rules (rows, columns, subgrids).
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if the puzzle is valid, false otherwise.
+ */
 fun puzzleIsValid(puzzle: SudokuPuzzle): Boolean {
     return !rowsAreInvalid(puzzle) && !columnsAreInvalid(puzzle) && !subgridsAreInvalid(puzzle)
 }
 
+/**
+ * Checks if any row in the puzzle is invalid (contains duplicate values).
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if any row is invalid, false otherwise.
+ */
 fun rowsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     for (y in 1..puzzle.boundary) {
         val values = mutableListOf<Int>()
@@ -32,6 +52,12 @@ fun rowsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     return false
 }
 
+/**
+ * Checks if any column in the puzzle is invalid (contains duplicate values).
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if any column is invalid, false otherwise.
+ */
 fun columnsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     for (x in 1..puzzle.boundary) {
         val values = mutableListOf<Int>()
@@ -46,6 +72,12 @@ fun columnsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     return false
 }
 
+/**
+ * Checks if any subgrid in the puzzle is invalid (contains duplicate values).
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if any subgrid is invalid, false otherwise.
+ */
 fun subgridsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     val interval = puzzle.boundary.sqrt
     for (i in 0 until interval) {
@@ -65,14 +97,37 @@ fun subgridsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     return false
 }
 
+/**
+ * Retrieves all nodes belonging to a specific column.
+ *
+ * @param graph The puzzle's graph representation.
+ * @param x The column index.
+ * @return A list of [SudokuNode] in the specified column.
+ */
 internal fun getNodesByColumn(graph: LinkedHashMap<Int, LinkedList<SudokuNode>>, x: Int): List<SudokuNode> {
     return graph.values.map { it.first() }.filter { it.x == x }
 }
 
+/**
+ * Retrieves all nodes belonging to a specific row.
+ *
+ * @param graph The puzzle's graph representation.
+ * @param y The row index.
+ * @return A list of [SudokuNode] in the specified row.
+ */
 internal fun getNodesByRow(graph: LinkedHashMap<Int, LinkedList<SudokuNode>>, y: Int): List<SudokuNode> {
     return graph.values.map { it.first() }.filter { it.y == y }
 }
 
+/**
+ * Retrieves all nodes belonging to a specific subgrid based on a node's coordinates.
+ *
+ * @param graph The puzzle's graph representation.
+ * @param x The node's x coordinate.
+ * @param y The node's y coordinate.
+ * @param boundary The boundary of the puzzle.
+ * @return A list of [SudokuNode] in the specified subgrid.
+ */
 internal fun getNodesBySubgrid(graph: LinkedHashMap<Int, LinkedList<SudokuNode>>, x: Int, y: Int, boundary: Int): List<SudokuNode> {
     val edgeList = mutableListOf<SudokuNode>()
     val iMaxX = getIntervalMax(boundary, x)
@@ -87,6 +142,13 @@ internal fun getNodesBySubgrid(graph: LinkedHashMap<Int, LinkedList<SudokuNode>>
     return edgeList
 }
 
+/**
+ * Calculates the maximum index of the subgrid interval for a given coordinate.
+ *
+ * @param boundary The boundary of the puzzle.
+ * @param target The coordinate index.
+ * @return The maximum index of the interval.
+ */
 internal fun getIntervalMax(boundary: Int, target: Int): Int {
     val interval = boundary.sqrt
     var i = interval
@@ -96,21 +158,23 @@ internal fun getIntervalMax(boundary: Int, target: Int): Int {
     return i
 }
 
+/**
+ * Checks if the puzzle has any empty squares (nodes with color 0).
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if there are empty squares, false otherwise.
+ */
 fun hasEmptySquares(puzzle: SudokuPuzzle): Boolean {
     return puzzle.graph.values.any { it.first().color == 0 }
 }
 
-//internal fun SudokuPuzzle.print() {
-//    val sb = StringBuilder()
-//    for (y in 1..boundary) {
-//        for (x in 1..boundary) {
-//            sb.append(this.graph[getHash(x, y)]?.firstOrNull()?.color ?: 0).append(" ")
-//        }
-//        sb.append("\n")
-//    }
-//    println(sb.toString())
-//}
-
+/**
+ * Calculates the possible values (colors) for a node based on its conflicts (adjacency list).
+ *
+ * @param adjList The adjacency list for a node (including the node itself).
+ * @param boundary The boundary of the puzzle.
+ * @return A list of valid values for the node.
+ */
 fun getPossibleValues(adjList: LinkedList<SudokuNode>, boundary: Int): List<Int> {
     val options = mutableListOf<Int>()
     val node = adjList.first()
@@ -125,6 +189,14 @@ fun getPossibleValues(adjList: LinkedList<SudokuNode>, boundary: Int): List<Int>
     return options
 }
 
+/**
+ * Calculates the possible values (colors) for a specific node given an adjacency list.
+ *
+ * @param key The node to find values for.
+ * @param adjList The list of conflicting nodes.
+ * @param boundary The boundary of the puzzle.
+ * @return A list of valid values for the node.
+ */
 fun getPossibleValues(key: SudokuNode, adjList: LinkedList<SudokuNode>, boundary: Int): List<Int> {
     val options = mutableListOf<Int>()
     val originalColor = key.color

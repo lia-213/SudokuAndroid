@@ -70,6 +70,14 @@ import com.bracketcove.graphsudoku.ui.textColorLight
 import com.bracketcove.graphsudoku.ui.userInputtedNumberDark
 import com.bracketcove.graphsudoku.ui.userInputtedNumberLight
 
+/**
+ * Root composable for the active game screen. Cross-fades between the loading, active board, and
+ * game-complete content based on [viewModel]'s content state, and hosts the toolbar with the
+ * "new game" action.
+ *
+ * @param onEventHandler Handler invoked with [ActiveGameEvent]s produced by user interaction.
+ * @param viewModel Supplies board/timer/content state and subscribes to updates from the logic layer.
+ */
 @OptIn(ExperimentalTransitionApi::class)
 @Composable
 fun ActiveGameScreen(
@@ -155,6 +163,11 @@ fun ActiveGameScreen(
     }
 }
 
+/**
+ * Toolbar icon button that dispatches [ActiveGameEvent.OnNewGameClicked] when tapped.
+ *
+ * @param onEventHandler Handler invoked with the new-game-clicked event.
+ */
 @Composable
 fun NewGameIcon(onEventHandler: (ActiveGameEvent) -> Unit) {
     IconButton(
@@ -170,6 +183,13 @@ fun NewGameIcon(onEventHandler: (ActiveGameEvent) -> Unit) {
     }
 }
 
+/**
+ * Lays out the active game's board, difficulty stars, timer, and number input row using a
+ * [ConstraintLayout], sizing the board to fit the available screen height.
+ *
+ * @param onEventHandler Handler invoked with events produced by the board and input buttons.
+ * @param viewModel Supplies the board state, difficulty, and puzzle boundary.
+ */
 @Composable
 fun GameContent(
     onEventHandler: (ActiveGameEvent) -> Unit,
@@ -260,6 +280,12 @@ fun GameContent(
     }
 }
 
+/**
+ * Displays a wrapping row of number input buttons, one for each value the user can enter.
+ *
+ * @param numbers The values to render as input buttons (typically `1..boundary`).
+ * @param onEventHandler Handler invoked with [ActiveGameEvent.OnInput] when a button is tapped.
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InputButtonRow(numbers: List<Int>, onEventHandler: (ActiveGameEvent) -> Unit) {
@@ -278,6 +304,12 @@ fun InputButtonRow(numbers: List<Int>, onEventHandler: (ActiveGameEvent) -> Unit
     Spacer(Modifier.size(2.dp))
 }
 
+/**
+ * A single number input button that dispatches [ActiveGameEvent.OnInput] with [number] when tapped.
+ *
+ * @param onEventHandler Handler invoked with the input event.
+ * @param number The value this button enters when tapped.
+ */
 @Composable
 fun SudokuInputButton(onEventHandler: (ActiveGameEvent) -> Unit,
                       number: Int) {
@@ -299,6 +331,12 @@ fun SudokuInputButton(onEventHandler: (ActiveGameEvent) -> Unit,
     }
 }
 
+/**
+ * Displays the elapsed game time, formatted as a clock string, subscribing to timer updates from
+ * [viewModel].
+ *
+ * @param viewModel Supplies the timer state via [ActiveGameViewModel.subTimerState].
+ */
 @Composable
 fun TimerText(viewModel: ActiveGameViewModel) {
     var timerState by remember {
@@ -318,6 +356,14 @@ fun TimerText(viewModel: ActiveGameViewModel) {
     )
 }
 
+/**
+ * Renders the Sudoku board as an overlay of tile text fields and grid dividers, subscribing to
+ * board state updates from [viewModel].
+ *
+ * @param onEventHandler Handler invoked with events produced by tapping a tile.
+ * @param viewModel Supplies the board state and puzzle boundary.
+ * @param size The width/height to render the (square) board at.
+ */
 @Composable
 fun SudokuBoard(
     onEventHandler: (ActiveGameEvent) -> Unit,
@@ -352,6 +398,12 @@ fun SudokuBoard(
     }
 }
 
+/**
+ * Draws the Sudoku grid lines, using a thicker divider at subgrid boundaries.
+ *
+ * @param boundary The puzzle's boundary (e.g. 9 for a 9x9 board).
+ * @param tileOffset The pixel size (in dp units) of a single tile.
+ */
 @Composable
 fun BoardGrid(boundary: Int, tileOffset: Float) {
     val interval = boundary.sqrt
@@ -375,6 +427,15 @@ fun BoardGrid(boundary: Int, tileOffset: Float) {
     }
 }
 
+/**
+ * Renders each tile in [boardState] as a positioned text element: editable/clickable tiles for
+ * user-entered values, and plain read-only text for pre-filled clues.
+ *
+ * @param onEventHandler Handler invoked with [ActiveGameEvent.OnTileFocused] when an editable tile
+ * is tapped.
+ * @param tileOffset The pixel size (in dp units) of a single tile, used for positioning.
+ * @param boardState The current value/focus/read-only state of every tile.
+ */
 @Composable
 fun SudokuTextFields(
     onEventHandler: (ActiveGameEvent) -> Unit,
@@ -426,6 +487,13 @@ fun SudokuTextFields(
     }
 }
 
+/**
+ * Displays the game-complete summary: a trophy icon, an optional "new record" message, and the
+ * final elapsed time.
+ *
+ * @param timerState The final elapsed time to display, in seconds.
+ * @param isNewRecordState Whether this completion set a new best time for the difficulty/boundary.
+ */
 @Composable
 fun GameCompleteContent(timerState: Long, isNewRecordState: Boolean) {
     Column(

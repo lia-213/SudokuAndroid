@@ -2,10 +2,16 @@ package com.bracketcove.graphsudoku.ui
 
 import androidx.compose.ui.graphics.Color
 
+/**
+ * Core brand colors used to build the light and dark [androidx.compose.material3.ColorScheme]s.
+ */
 val primaryGreen = Color(0XFF00bc00)
 val primaryCharcoal = Color(0xFF2b2b2b)
 val accentAmber = Color(0xFFffe400)
 
+/**
+ * Supporting colors for text, grid lines, surfaces, user-entered values, and the victory state.
+ */
 val textColorLight = Color(0xDCFFFFFF)
 val textColorDark = Color(0xFFf3f3f3)
 val gridLineColorLight = Color.Black

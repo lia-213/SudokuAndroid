@@ -18,9 +18,20 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
+/**
+ * Implementation of [IStatisticsRepository] backed by a Proto DataStore, converting between
+ * the generated [Statistics] proto and the domain [UserStatistics] model.
+ */
 class LocalStatisticsStorageImpl(
     private val dataStore: DataStore<Statistics>
 ) : IStatisticsRepository {
+    /**
+     * Reads the current [Statistics] from the DataStore and maps it to the domain
+     * [UserStatistics].
+     *
+     * @param onSuccess Callback with the [UserStatistics].
+     * @param onError Callback for errors.
+     */
     override suspend fun getStatistics(
         onSuccess: (UserStatistics) -> Unit,
         onError: (Exception) -> Unit
@@ -36,6 +47,17 @@ class LocalStatisticsStorageImpl(
         }
     }
 
+    /**
+     * Compares the given completion [time] against the stored best time for the matching
+     * [diff]/[boundary] combination, and overwrites it in the DataStore if the new time is
+     * a record (or no record exists yet).
+     *
+     * @param time The completion time in milliseconds.
+     * @param diff The difficulty of the completed puzzle.
+     * @param boundary The boundary of the completed puzzle.
+     * @param onSuccess Callback indicating if a new record was set.
+     * @param onError Callback for errors.
+     */
     override suspend fun updateStatistic(
         time: Long,
         diff: Difficulty,
@@ -71,6 +93,9 @@ class LocalStatisticsStorageImpl(
         }
     }
 
+    /**
+     * Converts a generated [Statistics] proto into the domain [UserStatistics] model.
+     */
     private val Statistics.toUserStatistics: UserStatistics
         get() {
             return UserStatistics(
@@ -83,6 +108,13 @@ class LocalStatisticsStorageImpl(
             )
         }
 
+    /**
+     * Looks up the stored best time for the given difficulty/boundary combination.
+     *
+     * @param diff The difficulty to look up.
+     * @param boundary The puzzle boundary to look up.
+     * @return The stored best time in milliseconds.
+     */
     private fun Statistics.findMatch(diff: Difficulty, boundary: Int): Long {
         return when {
             diff == Difficulty.EASY && boundary == 4 -> fourEasy
@@ -97,6 +129,15 @@ class LocalStatisticsStorageImpl(
         }
     }
 
+    /**
+     * Returns a copy of this [UserStatistics] with the entry for the given difficulty/boundary
+     * combination replaced by [time].
+     *
+     * @param time The new best time in milliseconds.
+     * @param diff The difficulty to update.
+     * @param boundary The puzzle boundary to update.
+     * @return The updated [UserStatistics].
+     */
     private fun UserStatistics.updateMatch(
         time: Long,
         diff: Difficulty,

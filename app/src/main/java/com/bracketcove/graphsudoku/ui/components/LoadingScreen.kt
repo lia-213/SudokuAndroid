@@ -25,6 +25,10 @@ import com.bracketcove.graphsudoku.R
 import com.bracketcove.graphsudoku.ui.lightGrey
 import com.bracketcove.graphsudoku.ui.mainTitle
 
+/**
+ * Full-screen loading indicator shown while a Sudoku game or its data is being loaded,
+ * displaying a logo, a progress bar, and a localized loading message.
+ */
 @Composable
 fun LoadingScreen() {
     Surface(

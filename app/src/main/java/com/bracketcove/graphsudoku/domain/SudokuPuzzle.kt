@@ -3,7 +3,14 @@ package com.bracketcove.graphsudoku.domain
 import java.io.Serializable
 import java.util.LinkedList
 
-// data models are virtual representations of real-world objects, e.g. sudoku puzzle
+/**
+ * Represents a complete Sudoku puzzle state.
+ *
+ * @property boundary The grid size boundary.
+ * @property difficulty The puzzle difficulty.
+ * @property graph The adjacency list representation of the puzzle grid.
+ * @property elapsedTime The time spent solving the puzzle in milliseconds.
+ */
 data class SudokuPuzzle(
     val boundary: Int,
     val difficulty: Difficulty,

@@ -12,6 +12,16 @@ import com.bracketcove.graphsudoku.ui.activegame.ActiveGameContainer
 import com.bracketcove.graphsudoku.ui.activegame.ActiveGameLogic
 import com.bracketcove.graphsudoku.ui.activegame.ActiveGameViewModel
 
+/**
+ * Assembles a fully-wired [ActiveGameLogic] instance, constructing its concrete repository and
+ * dispatcher dependencies (backed by local file/DataStore storage) for production use.
+ *
+ * @param container The [ActiveGameContainer] (typically the hosting Activity) that handles
+ * navigation and error display.
+ * @param viewModel The [ActiveGameViewModel] that will receive board/timer/state updates.
+ * @param context The Android [Context] used to resolve the app's file/DataStore locations.
+ * @return A ready-to-use [ActiveGameLogic].
+ */
 internal fun buildActiveGameLogic(
     container: ActiveGameContainer,
     viewModel: ActiveGameViewModel,

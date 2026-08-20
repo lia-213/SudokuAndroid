@@ -37,6 +37,13 @@ import com.bracketcove.graphsudoku.ui.components.LoadingScreen
 
 private const val TITLE = "New Game"
 
+/**
+ * Top-level Composable for the "new game" screen. Cross-fades between a
+ * [LoadingScreen] and the main [NewGameContent] based on [viewModel]'s loading state.
+ *
+ * @param onEventHandler Callback invoked with [NewGameEvent]s produced by user interaction.
+ * @param viewModel Holds the settings, statistics, and loading state to render.
+ */
 @Composable
 fun NewGameScreen(
     onEventHandler: (NewGameEvent) -> Unit,
@@ -83,6 +90,13 @@ fun NewGameScreen(
     }
 }
 
+/**
+ * Renders the main body of the "new game" screen: toolbar, size/difficulty dropdowns,
+ * and the statistics summary, laid out with a [ConstraintLayout].
+ *
+ * @param onEventHandler Callback invoked with [NewGameEvent]s produced by user interaction.
+ * @param viewModel Holds the current settings and statistics to display.
+ */
 @Composable
 fun NewGameContent(
     onEventHandler: (NewGameEvent) -> Unit,
@@ -168,6 +182,17 @@ fun NewGameContent(
     }
 }
 
+/**
+ * A titled dropdown menu used for selecting either the puzzle size (a list of
+ * `String` labels, e.g. "4x4") or the [Difficulty] (rendered with a localized label
+ * and star icons). Emits [NewGameEvent.OnSizeChanged] or [NewGameEvent.OnDifficultyChanged]
+ * when an item is selected, based on which kind of list was passed in.
+ *
+ * @param onEventHandler Callback invoked with the resulting [NewGameEvent] on selection.
+ * @param titleText Label displayed above the dropdown.
+ * @param initialIndex Index of the item initially selected.
+ * @param items The list of options; either `String` size labels or [Difficulty] values.
+ */
 @Composable
 fun DropdownWithTitle(
     onEventHandler: (NewGameEvent) -> Unit,
@@ -273,6 +298,12 @@ fun DropdownWithTitle(
 }
 
 
+/**
+ * Displays the user's best times for each size/difficulty combination as two
+ * side-by-side columns (4x4 and 9x9), separated by a vertical divider.
+ *
+ * @param stats The [UserStatistics] to render.
+ */
 @Composable
 fun StatisticsView(
     stats: UserStatistics
@@ -347,6 +378,12 @@ fun StatisticsView(
 
 }
 
+/**
+ * Toolbar "done" icon that, when tapped, emits [NewGameEvent.OnDonePressed] to
+ * request creation of the new game.
+ *
+ * @param onEventHandler Callback invoked with [NewGameEvent.OnDonePressed] on click.
+ */
 @Composable
 fun DoneIcon(onEventHandler: (NewGameEvent) -> Unit) {
     Icon(
@@ -364,6 +401,13 @@ fun DoneIcon(onEventHandler: (NewGameEvent) -> Unit) {
     )
 }
 
+/**
+ * Renders a single column of best-time entries, each paired with a number of star
+ * icons matching its row position (filled for a recorded time, outlined for zero/none).
+ *
+ * @param stats The list of best elapsed times (in millis), one per difficulty.
+ * @param modifier Modifier applied to the containing [Column].
+ */
 @Composable
 fun StatsColumn(
     stats: List<Long>,

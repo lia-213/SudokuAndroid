@@ -6,6 +6,11 @@ import com.bracketcove.graphsudoku.domain.getHash
 import java.util.LinkedList
 import kotlin.random.Random
 
+/**
+ * Removes values from a solved [SudokuPuzzle] to create a playable puzzle based on difficulty.
+ *
+ * @return The [SudokuPuzzle] with some values removed.
+ */
 internal fun SudokuPuzzle.unsolve(): SudokuPuzzle {
     // 1. Calculate how many clues to remove based on difficulty
     val totalTiles = boundary * boundary
@@ -35,7 +40,11 @@ internal fun SudokuPuzzle.unsolve(): SudokuPuzzle {
     return this
 }
 
-// Keeping helper functions for other logic but removed all recursive difficulty checks for now
+/**
+ * Creates a deep copy of the [SudokuPuzzle].
+ *
+ * @return A new [SudokuPuzzle] instance with identical state.
+ */
 internal fun SudokuPuzzle.deepCopy(): SudokuPuzzle {
     val newMap = LinkedHashMap<Int, LinkedList<SudokuNode>>()
     this.graph.forEach { (key, list) ->
@@ -48,12 +57,24 @@ internal fun SudokuPuzzle.deepCopy(): SudokuPuzzle {
     return SudokuPuzzle(this.boundary, this.difficulty, newMap, this.elapsedTime)
 }
 
+/**
+ * Determines the solving strategy required for a puzzle.
+ *
+ * @param puzzle The [SudokuPuzzle] to analyze.
+ * @return The [SolvingStrategy] required.
+ */
 internal fun determineDifficulty(puzzle: SudokuPuzzle): SolvingStrategy {
     if (isBasic(puzzle)) return SolvingStrategy.BASIC
     if (isAdvanced(puzzle)) return SolvingStrategy.ADVANCED
     return SolvingStrategy.UNSOLVABLE
 }
 
+/**
+ * Checks if a puzzle can be solved using basic solving techniques (e.g., single possibility).
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if it's solvable with basic techniques, false otherwise.
+ */
 internal fun isBasic(puzzle: SudokuPuzzle): Boolean {
     var solveable = true
     while (solveable) {
@@ -66,6 +87,13 @@ internal fun isBasic(puzzle: SudokuPuzzle): Boolean {
     return false
 }
 
+/**
+ * Applies basic Sudoku solving logic to a clique of nodes.
+ *
+ * @param clique A list of conflicting nodes.
+ * @param boundary The puzzle boundary.
+ * @return True if a value was assigned, false otherwise.
+ */
 internal fun basicSolver(clique: LinkedList<SudokuNode>, boundary: Int): Boolean {
     if (clique.firstOrNull()?.color == 0) {
         val options = getPossibleValues(clique, boundary)
@@ -77,6 +105,12 @@ internal fun basicSolver(clique: LinkedList<SudokuNode>, boundary: Int): Boolean
     return false
 }
 
+/**
+ * Checks if a puzzle can be solved using advanced solving techniques.
+ *
+ * @param puzzle The [SudokuPuzzle] to check.
+ * @return True if solvable with advanced techniques, false otherwise.
+ */
 internal fun isAdvanced(puzzle: SudokuPuzzle): Boolean {
     var solveable = true
     while (solveable) {
@@ -93,6 +127,14 @@ internal fun isAdvanced(puzzle: SudokuPuzzle): Boolean {
     return false
 }
 
+/**
+ * Applies advanced Sudoku solving logic.
+ *
+ * @param puzzle The [SudokuPuzzle].
+ * @param superClique A larger group of conflicting nodes.
+ * @param boundary The puzzle boundary.
+ * @return True if an assignment was made, false otherwise.
+ */
 fun advancedSolver(puzzle: SudokuPuzzle, superClique: LinkedList<SudokuNode>, boundary: Int): Boolean {
     val firstNode = superClique.firstOrNull() ?: return false
     val firstOptions = getPossibleValues(firstNode, superClique, boundary)
@@ -116,6 +158,15 @@ fun advancedSolver(puzzle: SudokuPuzzle, superClique: LinkedList<SudokuNode>, bo
     return false
 }
 
+/**
+ * Tests if assigning a pair of options to two nodes results in a valid puzzle state.
+ *
+ * @param options The two possible values.
+ * @param firstNode The first node in the pair.
+ * @param pairNode The second node in the pair.
+ * @param puzzle The [SudokuPuzzle].
+ * @return True if the assignments are valid, false otherwise.
+ */
 fun testPair(options: List<Int>, firstNode: SudokuNode, pairNode: SudokuNode, puzzle: SudokuPuzzle): Boolean {
     firstNode.color = options[0]
     pairNode.color = options[1]
@@ -130,10 +181,20 @@ fun testPair(options: List<Int>, firstNode: SudokuNode, pairNode: SudokuNode, pu
     return false
 }
 
+/**
+ * Checks if two lists of options contain the same set of values.
+ */
 fun areSameOptions(firstOptions: List<Int>, secondOptions: List<Int>): Boolean {
     return firstOptions.containsAll(secondOptions) && secondOptions.containsAll(firstOptions)
 }
 
+/**
+ * Retrieves a "super clique" of nodes for a given node, which includes its row, column, and subgrid nodes.
+ *
+ * @param first The source node.
+ * @param puzzle The [SudokuPuzzle].
+ * @return A [LinkedList] of all nodes conflicting with the source node.
+ */
 internal fun getSuperClique(first: SudokuNode, puzzle: SudokuPuzzle): LinkedList<SudokuNode> {
     val superClique = LinkedList<SudokuNode>()
     superClique.add(first)

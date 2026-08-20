@@ -3,12 +3,21 @@ package com.bracketcove.graphsudoku.common
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
-// objects are singletons - only one ever in memory at one particular time; threadsafe (even though co-r not a thread); can inherit from an interface
+/**
+ * Production implementation of [DispatcherProvider] using [Dispatchers.Main] for UI
+ * and [Dispatchers.IO] for background operations.
+ */
 object ProductionDispatcherProvider : DispatcherProvider {
+    /**
+     * Returns [Dispatchers.Main].
+     */
     override fun provideUIContext(): CoroutineContext {
         return Dispatchers.Main
     }
 
+    /**
+     * Returns [Dispatchers.IO].
+     */
     override fun provideIOContext(): CoroutineContext {
         // can use Dispatchers.Unconfined in io and ui context for testing in jvm junit testing env.
         return Dispatchers.IO

@@ -9,6 +9,15 @@ import com.bracketcove.graphsudoku.domain.getHash
 import java.util.LinkedList
 import kotlin.random.Random
 
+/**
+ * Builds a complete [SudokuPuzzle] based on the provided [boundary] and [difficulty].
+ * The process involves building nodes, connecting edges, seeding initial values, solving the puzzle,
+ * and then removing some values to reach the desired difficulty level.
+ *
+ * @param boundary The size of the Sudoku grid (e.g., 4, 9, 16).
+ * @param difficulty The desired difficulty level of the puzzle.
+ * @return A [SudokuPuzzle] ready to be played.
+ */
 fun buildSudoku(boundary: Int, difficulty: Difficulty): SudokuPuzzle {
     val puzzle = buildNodes(boundary, difficulty)
         .buildEdges()
@@ -18,6 +27,13 @@ fun buildSudoku(boundary: Int, difficulty: Difficulty): SudokuPuzzle {
     return puzzle
 }
 
+/**
+ * Initializes the nodes for a [SudokuPuzzle] grid.
+ *
+ * @param n The boundary of the puzzle.
+ * @param difficulty The difficulty level.
+ * @return A [SudokuPuzzle] with initialized nodes but no edges or values.
+ */
 internal fun buildNodes(n: Int, difficulty: Difficulty) : SudokuPuzzle {
     val newMap = LinkedHashMap<Int, LinkedList<SudokuNode>>()
 
@@ -40,6 +56,11 @@ internal fun buildNodes(n: Int, difficulty: Difficulty) : SudokuPuzzle {
     return SudokuPuzzle(n, difficulty, newMap)
 }
 
+/**
+ * Connects nodes in the [SudokuPuzzle] by building edges based on Sudoku rules (row, column, and subgrid).
+ *
+ * @return The [SudokuPuzzle] with nodes connected via edges.
+ */
 internal fun SudokuPuzzle.buildEdges(): SudokuPuzzle {
     this.graph.forEach {
         val x = it.value.first().x
@@ -60,6 +81,11 @@ internal fun SudokuPuzzle.buildEdges(): SudokuPuzzle {
     return this
 }
 
+/**
+ * Seeds initial random values (colors) into the Sudoku grid to ensure it's solvable.
+ *
+ * @return The [SudokuPuzzle] with initial seeded values.
+ */
 internal fun SudokuPuzzle.seedColors(): SudokuPuzzle {
     val allocatedNumbers = mutableListOf<Int>()
     var allocations = 0

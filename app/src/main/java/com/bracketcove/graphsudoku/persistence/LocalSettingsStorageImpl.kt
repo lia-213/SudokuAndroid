@@ -17,11 +17,19 @@ import java.io.InputStream
 import java.io.OutputStream
 
 /**
+ * Implementation of [ISettingsStorage] backed by a Proto DataStore, converting between the
+ * generated [GameSettings] proto and the domain [Settings] model.
+ *
  * Note: GameSettings is a class generated for Proto Datastore
  */
 class LocalSettingsStorageImpl(
     private val dataStore: DataStore<GameSettings>
 ) : ISettingsStorage {
+    /**
+     * Reads the current [GameSettings] from the DataStore and maps it to the domain [Settings].
+     *
+     * @return A [SettingsStorageResult] containing the settings or an error.
+     */
     override suspend fun getSettings(): SettingsStorageResult =
         withContext(Dispatchers.IO) {
             try {
@@ -33,6 +41,13 @@ class LocalSettingsStorageImpl(
         }
 
 
+    /**
+     * Writes the given [Settings] to the DataStore by updating the boundary and difficulty
+     * fields of the stored [GameSettings] proto.
+     *
+     * @param settings The new [Settings] to save.
+     * @return A [SettingsStorageResult] indicating success or failure.
+     */
     override suspend fun updateSettings(settings: Settings): SettingsStorageResult =
         withContext(Dispatchers.IO) {
             try {
@@ -51,12 +66,18 @@ class LocalSettingsStorageImpl(
         }
 }
 
+/**
+ * Converts a generated [GameSettings] proto into the domain [Settings] model.
+ */
 private val GameSettings.toSettings: Settings
     get() = Settings(
         this.difficulty.toDomain,
         this.boundary.verify()
     )
 
+/**
+ * Maps a [GameSettings.ProtoDifficulty] proto enum value to the domain [Difficulty].
+ */
 private val GameSettings.ProtoDifficulty.toDomain: Difficulty
     get() = when (this.number) {
         1 -> Difficulty.EASY
@@ -65,6 +86,9 @@ private val GameSettings.ProtoDifficulty.toDomain: Difficulty
         else -> Difficulty.MEDIUM
     }
 
+/**
+ * Maps a domain [Difficulty] to its [GameSettings.ProtoDifficulty] proto enum value.
+ */
 private val Difficulty.toProto: GameSettings.ProtoDifficulty
     get() =  when (this) {
         Difficulty.EASY -> GameSettings.ProtoDifficulty.EASY
@@ -73,6 +97,12 @@ private val Difficulty.toProto: GameSettings.ProtoDifficulty
     }
 
 
+/**
+ * Ensures a boundary value is one of the supported puzzle sizes (4, 9, 16), defaulting to 4
+ * if the stored value is unrecognized.
+ *
+ * @return The verified boundary value.
+ */
 private fun Int.verify(): Int {
     return when (this) {
         4 -> this

@@ -8,7 +8,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
-// Set of Material 3 typography styles to start with
+/**
+ * Set of Material 3 typography styles to start with.
+ */
 val typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -26,6 +28,10 @@ val typography = Typography(
     )
 )
 
+/**
+ * Custom text styles used for specific screens and widgets, such as statistics labels,
+ * number-pad buttons, screen titles/subtitles, and the victory banner.
+ */
 val statsLabel = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Light,
@@ -61,6 +67,12 @@ val mainTitle = TextStyle(
     textAlign = TextAlign.Center
 )
 
+/**
+ * Text style for dropdown menu items, allowing the text color to be customized per-item.
+ *
+ * @param color The color to apply to the dropdown text.
+ * @return A [TextStyle] configured for dropdown menu text.
+ */
 fun dropdownText(color: Color) = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Normal,
@@ -69,6 +81,12 @@ fun dropdownText(color: Color) = TextStyle(
     color = color
 )
 
+/**
+ * Text style for a read-only (pre-filled) Sudoku square, scaling font size to the tile's size.
+ *
+ * @param tileOffset The pixel size of the square tile, used to derive a proportional font size.
+ * @return A [TextStyle] configured for a read-only Sudoku square.
+ */
 fun readOnlySudokuSquare(tileOffset: Float) = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Light,
@@ -77,6 +95,12 @@ fun readOnlySudokuSquare(tileOffset: Float) = TextStyle(
     color = Color.Black
 )
 
+/**
+ * Text style for a mutable (user-editable) Sudoku square, scaling font size to the tile's size.
+ *
+ * @param tileOffset The pixel size of the square tile, used to derive a proportional font size.
+ * @return A [TextStyle] configured for a mutable Sudoku square.
+ */
 fun mutableSudokuSquare(tileOffset: Float) = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Light,
