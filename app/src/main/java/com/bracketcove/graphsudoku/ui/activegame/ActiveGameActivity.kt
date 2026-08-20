@@ -2,8 +2,9 @@ package com.bracketcove.graphsudoku.ui.activegame
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.enableEdgeToEdge
 import com.bracketcove.graphsudoku.R
 import com.bracketcove.graphsudoku.common.makeToast
 import com.bracketcove.graphsudoku.ui.GraphSudokuTheme
@@ -11,12 +12,13 @@ import com.bracketcove.graphsudoku.ui.activegame.buildlogic.buildActiveGameLogic
 import com.bracketcove.graphsudoku.ui.newgame.NewGameActivity
 
 // purpose: as a feature-specific container
-class ActiveGameActivity : AppCompatActivity(), ActiveGameContainer {
+class ActiveGameActivity : ComponentActivity(), ActiveGameContainer {
     // creating a reference to ActiveGameLogic class
     private lateinit var logic: ActiveGameLogic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         val viewModel = ActiveGameViewModel()
 

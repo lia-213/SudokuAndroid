@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
@@ -28,13 +30,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -43,8 +47,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -82,7 +86,7 @@ fun ActiveGameScreen(
         contentTransitionState.targetState = it
     }
 
-    val transition = rememberTransition(contentTransitionState)
+    val transition = rememberTransition(contentTransitionState, label = "screenTransition")
 
     val loadingAlpha by transition.animateFloat(
         transitionSpec = { tween(durationMillis = 300) },
@@ -105,21 +109,21 @@ fun ActiveGameScreen(
         if (it == ActiveGameScreenState.COMPLETE) 1f else 0f
     }
 
-    Column(
-        Modifier
-            .background(MaterialTheme.colors.primary)
-            .fillMaxHeight()
-    ) {
-        AppToolbar(
-            modifier = Modifier.wrapContentHeight(),
-            title = stringResource(R.string.app_name)
-        ) {
-            NewGameIcon(onEventHandler = onEventHandler)
-        }
-
+    Scaffold(
+        topBar = {
+            AppToolbar(
+                modifier = Modifier.wrapContentHeight(),
+                title = stringResource(R.string.app_name)
+            ) {
+                NewGameIcon(onEventHandler = onEventHandler)
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.primary
+    ) { innerPadding ->
         Box(
             modifier = Modifier
-                .fillMaxHeight()
+                .fillMaxSize()
+                .padding(innerPadding)
                 .padding(top = 4.dp),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -158,7 +162,7 @@ fun NewGameIcon(onEventHandler: (ActiveGameEvent) -> Unit) {
     ) {
         Icon(
             imageVector = Icons.Default.Add,
-            tint = if (MaterialTheme.colors.isLight) textColorLight else textColorDark,
+            tint = if (MaterialTheme.colorScheme.primary == Color.White) textColorLight else textColorDark,
             contentDescription = null,
             modifier = Modifier
                 .height(36.dp)
@@ -172,19 +176,13 @@ fun GameContent(
     viewModel: ActiveGameViewModel
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val screenWidth = with(LocalDensity.current) {
-            constraints.maxWidth.toDp()
+        val margin = when {
+            maxHeight < 500.dp -> 20.dp
+            maxHeight < 550.dp -> 8.dp
+            else -> 0.dp
         }
 
-        val margin = with(LocalDensity.current) {
-            when {
-                constraints.maxHeight.toDp().value < 500 -> 20
-                constraints.maxHeight.toDp().value < 550 -> 8
-                else -> 0
-            }
-        }
-
-        val boardSize = screenWidth - margin.dp
+        val boardSize = maxWidth - margin
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (board, timer, diff, inputs) = createRefs()
@@ -196,11 +194,11 @@ fun GameContent(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
-                    .background(MaterialTheme.colors.surface)
+                    .background(MaterialTheme.colorScheme.surface)
                     .size(boardSize)
                     .border(
                         width = 2.dp,
-                        color = MaterialTheme.colors.primaryVariant
+                        color = MaterialTheme.colorScheme.outline
                     )
             ) {
                 SudokuBoard(
@@ -222,7 +220,7 @@ fun GameContent(
                     Icon(
                         contentDescription = stringResource(R.string.difficulty),
                         imageVector = Icons.Filled.Star,
-                        tint = MaterialTheme.colors.secondary,
+                        tint = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier
                             .size(32.dp)
                             .padding(top = 4.dp)
@@ -253,25 +251,22 @@ fun GameContent(
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (viewModel.boundary == 4) {
-                    InputButtonRow(
-                        (1..4).toList(),
-                        onEventHandler
-                    )
-                } else {
-                    InputButtonRow(
-                        (1..9).toList(),
-                        onEventHandler
-                    )
-                }
+                InputButtonRow(
+                    (1..viewModel.boundary).toList(),
+                    onEventHandler
+                )
             }
         }
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InputButtonRow(numbers: List<Int>, onEventHandler: (ActiveGameEvent) -> Unit) {
-    Row {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
         numbers.forEach {
             SudokuInputButton(
                 onEventHandler,
@@ -292,12 +287,12 @@ fun SudokuInputButton(onEventHandler: (ActiveGameEvent) -> Unit,
             .requiredSize(56.dp)
             .padding(2.dp),
         border = BorderStroke(
-            ButtonDefaults.OutlinedBorderSize, MaterialTheme.colors.onPrimary
+            ButtonDefaults.outlinedButtonBorder.width, MaterialTheme.colorScheme.onPrimary
         )
     ) {
         Text(
             text = number.toString(),
-            style = inputButton.copy(color = MaterialTheme.colors.onPrimary),
+            style = inputButton.copy(color = MaterialTheme.colorScheme.onPrimary),
             modifier = Modifier.fillMaxSize(),
             textAlign = TextAlign.Center
         )
@@ -318,7 +313,7 @@ fun TimerText(viewModel: ActiveGameViewModel) {
         modifier = Modifier.requiredHeight(36.dp),
         text = timerState,
         style = activeGameSubtitle.copy(
-            color = MaterialTheme.colors.secondary
+            color = MaterialTheme.colorScheme.secondary
         )
     )
 }
@@ -359,23 +354,23 @@ fun SudokuBoard(
 
 @Composable
 fun BoardGrid(boundary: Int, tileOffset: Float) {
+    val interval = boundary.sqrt
     (1 until boundary).forEach {
-        val width = if (it % boundary.sqrt == 0) 3.dp else 1.dp
-        Divider(
-            color = MaterialTheme.colors.primaryVariant,
+        val width = if (it % interval == 0) 3.dp else 1.dp
+        VerticalDivider(
+            color = MaterialTheme.colorScheme.outline,
             modifier = Modifier
                 .absoluteOffset((tileOffset * it).dp, 0.dp)
                 .fillMaxHeight()
                 .width(width)
         )
 
-        val height = if (it % boundary.sqrt == 0) 3.dp else 1.dp
-        Divider(
-            color = MaterialTheme.colors.primaryVariant,
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outline,
             modifier = Modifier
                 .absoluteOffset(0.dp, (tileOffset * it).dp)
                 .fillMaxWidth()
-                .height(height)
+                .height(width)
         )
     }
 }
@@ -395,7 +390,7 @@ fun SudokuTextFields(
             Text(
                 text = text,
                 style = mutableSudokuSquare(tileOffset).copy(
-                    color = if (MaterialTheme.colors.isLight) userInputtedNumberLight
+                    color = if (MaterialTheme.colorScheme.primary == Color.White) userInputtedNumberLight
                     else userInputtedNumberDark
                 ),
                 modifier = Modifier
@@ -405,8 +400,8 @@ fun SudokuTextFields(
                     )
                     .size(tileOffset.dp)
                     .background(
-                        if (tile.hasFocus) MaterialTheme.colors.onPrimary.copy(alpha = .25f)
-                        else MaterialTheme.colors.surface
+                        if (tile.hasFocus) MaterialTheme.colorScheme.onPrimary.copy(alpha = .25f)
+                        else MaterialTheme.colorScheme.surface
                     )
                     .clickable {
                         onEventHandler.invoke(
@@ -435,7 +430,7 @@ fun SudokuTextFields(
 fun GameCompleteContent(timerState: Long, isNewRecordState: Boolean) {
     Column(
         Modifier.fillMaxSize()
-            .background(MaterialTheme.colors.primary),
+            .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -447,28 +442,31 @@ fun GameCompleteContent(timerState: Long, isNewRecordState: Boolean) {
             Image(
                 contentDescription = stringResource(R.string.game_complete),
                 imageVector = Icons.Filled.EmojiEvents,
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                 modifier = Modifier.size(128.dp)
             )
-            if (isNewRecordState) Image(
-                contentDescription =  null,
-                imageVector = Icons.Filled.Star,
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary),
-                modifier = Modifier.size(128.dp)
+        }
+
+        if (isNewRecordState) {
+            Text(
+                text = stringResource(R.string.new_record),
+                style = newGameSubtitle.copy(
+                    color = MaterialTheme.colorScheme.secondary
+                )
             )
         }
 
         Text(
             text = stringResource(R.string.total_time),
             style = newGameSubtitle.copy(
-                color = MaterialTheme.colors.secondary
+                color = MaterialTheme.colorScheme.secondary
             )
         )
 
         Text(
             text = timerState.toTime(),
             style = newGameSubtitle.copy(
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Normal
             )
         )

@@ -4,8 +4,9 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.enableEdgeToEdge
 import com.bracketcove.graphsudoku.R
 import com.bracketcove.graphsudoku.common.makeToast
 import com.bracketcove.graphsudoku.ui.GraphSudokuTheme
@@ -15,12 +16,13 @@ import com.bracketcove.graphsudoku.ui.newgame.buildlogic.buildNewGameLogic
 /**
  * This feature is so simple that it is not even worth it to have a separate logic class
  */
-class NewGameActivity : AppCompatActivity(), NewGameContainer {
+class NewGameActivity : ComponentActivity(), NewGameContainer {
     private lateinit var logic: NewGameLogic
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         val viewModel = NewGameViewModel()
 

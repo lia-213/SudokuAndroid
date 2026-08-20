@@ -7,7 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Star
@@ -32,7 +32,6 @@ import com.bracketcove.graphsudoku.domain.Difficulty
 import com.bracketcove.graphsudoku.domain.Settings
 import com.bracketcove.graphsudoku.domain.UserStatistics
 import com.bracketcove.graphsudoku.ui.*
-import com.bracketcove.graphsudoku.ui.activegame.ActiveGameScreenState
 import com.bracketcove.graphsudoku.ui.components.AppToolbar
 import com.bracketcove.graphsudoku.ui.components.LoadingScreen
 
@@ -49,16 +48,18 @@ fun NewGameScreen(
         )
     }
 
-    val transition = updateTransition(contentStateTransition)
+    val transition = updateTransition(contentStateTransition, label = "loadingTransition")
 
     val loadingAlpha by transition.animateFloat(
-        transitionSpec = { tween(durationMillis = 300) }
+        transitionSpec = { tween(durationMillis = 300) },
+        label = "loadingAlpha"
     ) {
         if (it) 1f else 0f
     }
 
     val mainAlpha by transition.animateFloat(
-        transitionSpec = { tween(durationMillis = 300) }
+        transitionSpec = { tween(durationMillis = 300) },
+        label = "mainAlpha"
     ) {
         if (!it) 1f else 0f
     }
@@ -70,10 +71,10 @@ fun NewGameScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Box(Modifier.alpha(loadingAlpha)) { LoadingScreen() }
-        if (!contentStateTransition.currentState) Box(Modifier.alpha(mainAlpha)) {
+        if (!contentStateTransition.targetState) Box(Modifier.alpha(mainAlpha)) {
             NewGameContent(
                 onEventHandler,
                 viewModel
@@ -90,9 +91,10 @@ fun NewGameContent(
     Surface(
         Modifier
             .wrapContentHeight()
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        color = MaterialTheme.colorScheme.primary
     ) {
-        ConstraintLayout(Modifier.background(MaterialTheme.colors.primary)) {
+        ConstraintLayout(Modifier.background(MaterialTheme.colorScheme.primary)) {
             val (toolbar,
                 sizeDropdown,
                 diffDropdown,
@@ -173,7 +175,6 @@ fun DropdownWithTitle(
     initialIndex: Int,
     items: List<Any>,
 ) {
-//I wanted to reduce repetitive code, but the two menus are rendered slightly differently
     val isSizeMenu = items[0] is String
 
     var showMenu by remember { mutableStateOf(false) }
@@ -186,7 +187,7 @@ fun DropdownWithTitle(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = titleText,
-            style = newGameSubtitle.copy(color = MaterialTheme.colors.secondary),
+            style = newGameSubtitle.copy(color = MaterialTheme.colorScheme.secondary),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 32.dp),
@@ -201,7 +202,7 @@ fun DropdownWithTitle(
                 text = if (isSizeMenu) items[menuIndex] as String
                 else stringResource(id = (items[menuIndex] as Difficulty).toLocalizedResource),
                 style = newGameSubtitle.copy(
-                    color = MaterialTheme.colors.onPrimary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Normal
                 ),
                 modifier = Modifier
@@ -211,12 +212,13 @@ fun DropdownWithTitle(
             Icon(
                 contentDescription = stringResource(R.string.dropdown),
                 imageVector = Icons.Outlined.ArrowDropDown,
-                tint = MaterialTheme.colors.secondary,
+                tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier
                     .size(48.dp)
                     .rotate(
                         animateFloatAsState(
                             if (!showMenu) 0f else 180f,
+                            label = "dropdownRotate"
                         ).value
                     )
                     .align(Alignment.CenterVertically)
@@ -228,11 +230,31 @@ fun DropdownWithTitle(
             ) {
                 items.forEachIndexed { index, _ ->
                     DropdownMenuItem(
+                        text = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = if (isSizeMenu) items[index] as String
+                                    else stringResource(id = (items[index] as Difficulty).toLocalizedResource),
+                                    style = dropdownText(MaterialTheme.colorScheme.outline),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+
+                                if (!isSizeMenu) {
+                                    (0..index).forEach {
+                                        Icon(
+                                            contentDescription = stringResource(R.string.difficulty),
+                                            imageVector = Icons.Filled.Star,
+                                            tint = MaterialTheme.colorScheme.outline,
+                                            modifier = Modifier.size(36.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        },
                         onClick = {
                             menuIndex = index
                             showMenu = false
                             onEventHandler.invoke(
-                                //the first.toString.toInt is so we don't get the ASCII value
                                 if (isSizeMenu) NewGameEvent.OnSizeChanged(
                                     (items[index] as String)
                                         .first().toString().toInt()
@@ -242,28 +264,8 @@ fun DropdownWithTitle(
                         },
                         modifier = Modifier
                             .wrapContentSize()
-                            .background(MaterialTheme.colors.surface)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = if (isSizeMenu) items[index] as String
-                                else stringResource(id = (items[index] as Difficulty).toLocalizedResource),
-                                style = dropdownText(MaterialTheme.colors.primaryVariant),
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-
-                            if (!isSizeMenu) {
-                                (0..index).forEach {
-                                    Icon(
-                                        contentDescription = stringResource(R.string.difficulty),
-                                        imageVector = Icons.Filled.Star,
-                                        tint = MaterialTheme.colors.primaryVariant,
-                                        modifier = Modifier.size(36.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
+                            .background(MaterialTheme.colorScheme.surface)
+                    )
                 }
             }
         }
@@ -311,7 +313,7 @@ fun StatisticsView(
                 }
         )
 
-        Divider(
+        HorizontalDivider(
             Modifier
                 .size(1.dp)
                 .constrainAs(divHor) {
@@ -349,7 +351,7 @@ fun StatisticsView(
 fun DoneIcon(onEventHandler: (NewGameEvent) -> Unit) {
     Icon(
         imageVector = Icons.Filled.Done,
-        tint = if (MaterialTheme.colors.isLight) textColorLight else textColorDark,
+        tint = if (MaterialTheme.colorScheme.primary == Color.White) textColorLight else textColorDark,
         contentDescription = null,
         modifier = Modifier
             .clickable(onClick = {
@@ -386,7 +388,7 @@ fun StatsColumn(
                     text = stat.toTime(),
                     style = statsLabel.copy(
                         color = if (isZero) Color.White
-                        else MaterialTheme.colors.onPrimary,
+                        else MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Normal
                     ),
                     modifier = Modifier
@@ -401,7 +403,7 @@ fun StatsColumn(
                         imageVector = if (isZero) Icons.Outlined.StarBorder
                         else Icons.Filled.Star,
                         tint = if (isZero) Color.White
-                        else MaterialTheme.colors.onPrimary,
+                        else MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
                 }

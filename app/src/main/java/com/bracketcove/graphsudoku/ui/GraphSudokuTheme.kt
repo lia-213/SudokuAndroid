@@ -1,44 +1,28 @@
 package com.bracketcove.graphsudoku.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-// colors defined here will be automatically inherited by widgets; this is especially
-// useful when supporting light and dark themes
-private val LightColorPalette = lightColors(
+private val LightColorScheme = lightColorScheme(
     primary = primaryGreen,
     secondary = textColorLight,
     surface = lightGrey,
-    primaryVariant = gridLineColorLight,
     onPrimary = accentAmber,
-    onSurface = accentAmber
+    onSurface = accentAmber,
+    outline = gridLineColorLight
 )
 
-private val DarkColorPalette = darkColors(
-    //main background color
+private val DarkColorScheme = darkColorScheme(
     primary = primaryCharcoal,
-    //used for text color
     secondary = textColorDark,
-    //background of sudoku board
     surface = lightGreyAlpha,
-    //grid lines of sudoku board
-    primaryVariant = gridLineColorLight,
     onPrimary = accentAmber,
-    onSurface = accentAmber
+    onSurface = accentAmber,
+    outline = gridLineColorLight
 )
-
-/*
-@Composable is an annotation that tells the Kotlin compiler "this function describes UI, not logic."
-
-Any function marked @Composable can:
-
-Draw something on screen
-Call other @Composable functions
-React to state changes and redraw automatically (recomposition)
- */
 
 @Composable
 fun GraphSudokuTheme(
@@ -46,7 +30,7 @@ fun GraphSudokuTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = if (darkTheme) DarkColorPalette else LightColorPalette,
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = typography,
         shapes = shapes,
         content = content
