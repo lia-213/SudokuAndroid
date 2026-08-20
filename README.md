@@ -1,4 +1,4 @@
-# Multiplayer Sudoku
+# SudokuAndroid
 
 ## Attribution / Credit
 This project is a fork of **[GraphSudokuOpen](https://github.com/BracketCove/GraphSudokuOpen)** by **[BracketCove](https://github.com/BracketCove)**. 

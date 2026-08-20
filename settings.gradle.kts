@@ -17,5 +17,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MultiplayerSudoku"
+rootProject.name = "SudokuAndroid"
 include(":app")
