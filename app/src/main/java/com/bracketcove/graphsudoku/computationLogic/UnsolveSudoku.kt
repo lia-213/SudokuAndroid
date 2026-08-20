@@ -1,16 +1,12 @@
 package com.bracketcove.graphsudoku.computationLogic
 
-import android.util.Log
-import com.bracketcove.graphsudoku.domain.Difficulty
 import com.bracketcove.graphsudoku.domain.SudokuNode
 import com.bracketcove.graphsudoku.domain.SudokuPuzzle
 import com.bracketcove.graphsudoku.domain.getHash
-import java.util.*
+import java.util.LinkedList
 import kotlin.random.Random
 
 internal fun SudokuPuzzle.unsolve(): SudokuPuzzle {
-    Log.d("SUDOKU", "unsolve: started")
-    
     // 1. Calculate how many clues to remove based on difficulty
     val totalTiles = boundary * boundary
     val targetClues = (totalTiles * difficulty.modifier).toInt()
@@ -36,7 +32,6 @@ internal fun SudokuPuzzle.unsolve(): SudokuPuzzle {
         }
     }
     
-    Log.d("SUDOKU", "unsolve: finished. Removed $removedCount tiles.")
     return this
 }
 

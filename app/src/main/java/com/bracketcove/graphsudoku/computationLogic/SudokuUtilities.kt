@@ -10,15 +10,15 @@ internal val Int.sqrt: Int
     get() = sqrt(this.toDouble()).toInt()
 
 
-internal fun puzzleIsComplete(puzzle: SudokuPuzzle): Boolean {
+fun puzzleIsComplete(puzzle: SudokuPuzzle): Boolean {
     return puzzleIsValid(puzzle) && !hasEmptySquares(puzzle)
 }
 
-internal fun puzzleIsValid(puzzle: SudokuPuzzle): Boolean {
+fun puzzleIsValid(puzzle: SudokuPuzzle): Boolean {
     return !rowsAreInvalid(puzzle) && !columnsAreInvalid(puzzle) && !subgridsAreInvalid(puzzle)
 }
 
-internal fun rowsAreInvalid(puzzle: SudokuPuzzle): Boolean {
+fun rowsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     for (y in 1..puzzle.boundary) {
         val values = mutableListOf<Int>()
         for (x in 1..puzzle.boundary) {
@@ -32,7 +32,7 @@ internal fun rowsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     return false
 }
 
-internal fun columnsAreInvalid(puzzle: SudokuPuzzle): Boolean {
+fun columnsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     for (x in 1..puzzle.boundary) {
         val values = mutableListOf<Int>()
         for (y in 1..puzzle.boundary) {
@@ -46,7 +46,7 @@ internal fun columnsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     return false
 }
 
-internal fun subgridsAreInvalid(puzzle: SudokuPuzzle): Boolean {
+fun subgridsAreInvalid(puzzle: SudokuPuzzle): Boolean {
     val interval = puzzle.boundary.sqrt
     for (i in 0 until interval) {
         for (j in 0 until interval) {
@@ -96,20 +96,20 @@ internal fun getIntervalMax(boundary: Int, target: Int): Int {
     return i
 }
 
-internal fun hasEmptySquares(puzzle: SudokuPuzzle): Boolean {
+fun hasEmptySquares(puzzle: SudokuPuzzle): Boolean {
     return puzzle.graph.values.any { it.first().color == 0 }
 }
 
-internal fun SudokuPuzzle.print() {
-    val sb = StringBuilder()
-    for (y in 1..boundary) {
-        for (x in 1..boundary) {
-            sb.append(this.graph[getHash(x, y)]?.firstOrNull()?.color ?: 0).append(" ")
-        }
-        sb.append("\n")
-    }
-    println(sb.toString())
-}
+//internal fun SudokuPuzzle.print() {
+//    val sb = StringBuilder()
+//    for (y in 1..boundary) {
+//        for (x in 1..boundary) {
+//            sb.append(this.graph[getHash(x, y)]?.firstOrNull()?.color ?: 0).append(" ")
+//        }
+//        sb.append("\n")
+//    }
+//    println(sb.toString())
+//}
 
 fun getPossibleValues(adjList: LinkedList<SudokuNode>, boundary: Int): List<Int> {
     val options = mutableListOf<Int>()
