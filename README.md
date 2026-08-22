@@ -14,9 +14,36 @@ The original project serves as the foundation for this repository. Specifically,
 ---
 
 ## What this fork actually is
-I am using this excellent project as a learning base to deepen my understanding of Jetpack Compose, MVI architecture, and advanced graph algorithms. My work so far has focused on modernizing the build system to work with current Android development standards and troubleshooting compatibility issues across different platforms (macOS/Windows). 
+I am using this excellent project as a learning base to deepen my understanding of Jetpack Compose, Clean Architecture, and advanced graph algorithms. While the codebase uses the name `ViewModel` for its state holders, it actually implements a specialized **Model-View-Intent (MVI)** presentation pattern within a **Clean Architecture** framework.
+
+My work so far has focused on modernizing the build system to work with current Android development standards and troubleshooting compatibility issues across different platforms (macOS/Windows). 
 
 Moving forward, I plan to iterate on the solver algorithm and eventually implement a **Multiplayer** mode on top of the existing single-player foundation - this will be for my University dissertation. At this stage, the core game mechanics and original algorithm remain the work of the original author.
+
+---
+
+## Architecture & Design Patterns
+The project follows **Clean Architecture** principles, separating concerns into clearly defined layers:
+
+### 1. Presentation Layer (MVI)
+Instead of standard MVVM, this project uses a reactive **Model-View-Intent** approach:
+- **Events (Intent)**: Represent user actions (e.g., `ActiveGameEvent.OnInput`).
+- **Logic (Controller/Brain)**: Processes Events, manages side effects (like the timer), and coordinates with Repositories. See `ActiveGameLogic`.
+- **ViewModel (State Holder)**: A plain Kotlin class that holds the screen state. It is **not** the `androidx.lifecycle.ViewModel`. It exposes state via custom callback subscriptions.
+- **Screen (View)**: Jetpack Compose UI that dispatches Events to Logic and renders state from the ViewModel.
+
+### 2. Domain Layer
+Contains the core business rules and data models:
+- **Models**: `SudokuPuzzle`, `SudokuNode`.
+- **Repository Interfaces**: Define how the app interacts with data (e.g., `IGameRepository`).
+
+### 3. Data / Persistence Layer
+Handles data storage using **Proto DataStore** and local file storage:
+- **Repository Implementations**: `GameRepositoryImpl`.
+- **Storage**: Concrete implementations for settings and statistics.
+
+### 4. Dependency Injection
+The project uses **Manual Dependency Injection** (Service Locator/Builder pattern) instead of libraries like Dagger/Hilt. Wiring is handled in `buildlogic` packages (e.g., `buildActiveGameLogic`).
 
 ---
 
