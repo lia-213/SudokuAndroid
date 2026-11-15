@@ -14,7 +14,7 @@ The original project serves as the foundation for this repository. Specifically,
 ---
 
 ## What this fork actually is
-I am using this excellent project as a learning base to deepen my understanding of Jetpack Compose, Clean Architecture, and advanced graph algorithms. While the codebase uses the name `ViewModel` for its state holders, it actually implements a specialized **Model-View-Intent (MVI)** presentation pattern within a **Clean Architecture** framework.
+I am using this project as a learning base to deepen my understanding of Jetpack Compose, Clean Architecture, and advanced graph algorithms. While the codebase uses the name `ViewModel` for its state holders, it actually implements a specialized **Model-View-Intent (MVI)** presentation pattern within a **Clean Architecture** framework.
 
 My work so far has focused on modernizing the build system to work with current Android development standards and troubleshooting compatibility issues across different platforms (macOS/Windows). 
 
